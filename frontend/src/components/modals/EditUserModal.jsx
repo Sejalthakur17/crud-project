@@ -4,11 +4,10 @@ import { toast } from "sonner";
 import axios from "axios";
 
 //starting of the functional component which edits the user in the database
-function EditUserModal() {
+function EditUserModal({ user, onUserUpdated }) {
   //using state variables for access of the input fields
-  const [id, setId] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState(user?.name || "");
+  const [email, setEmail] = useState(user?.email || "");
 
   //function for dynamic change of values for the input fields of id field
   const handleIdChange = (event) => {
@@ -35,7 +34,7 @@ function EditUserModal() {
     try {
       //put req to server
       const res = await axios.put(import.meta.env.VITE_API_URL, {
-        id,
+        id: user.id,
         name,
         email
       });
@@ -48,9 +47,7 @@ function EditUserModal() {
         setEmail(""); //empty the fields after successful operation
 
         //after 3 sec reload the page for users to view edit
-        setTimeout(() => {
-          location.reload();
-        }, 3000);
+        setTimeout(() => 3000);
 
       }
     } catch (error) {
@@ -92,20 +89,6 @@ function EditUserModal() {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">
-              <div className="mb-3">
-                <label htmlFor="id" className="form-label">
-                  Id:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="id"
-                  placeholder="Ex: 12"
-                  value={id}
-                  onChange={handleIdChange}
-                />
-              </div>
               <div className="mb-3">
                 <label htmlFor="name" className="form-label">
                   New Name:
@@ -145,7 +128,6 @@ function EditUserModal() {
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 }
