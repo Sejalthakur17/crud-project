@@ -26,6 +26,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      # Login to ECR
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
       # Create repos if not exist
       - name: Ensure ECR repositories exist
         run: |
@@ -34,10 +38,6 @@ jobs:
 
           aws ecr describe-repositories --repository-names backend || \
           aws ecr create-repository --repository-name backend
-
-      # Login to ECR
-      - name: Login to ECR
-        uses: aws-actions/amazon-ecr-login@v1
 
       # Build & push frontend
       - name: Build & Push Frontend
