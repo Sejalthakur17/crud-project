@@ -3,33 +3,41 @@ version: "3.8"
 services:
   frontend:
     build: ./frontend
+    container_name: frontend
     ports:
       - "80:80"
     depends_on:
       - backend
+    restart: always
 
   backend:
     build: ./backend
+    container_name: backend
     ports:
       - "5000:5000"
-    environment:
-      - DB_HOST=mysql
-      - DB_USER=root
-      - DB_PASSWORD=root
-      - DB_NAME=testdb
+    env_file:
+      - .env
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+    restart: always
 
   mysql:
     image: mysql:8
+    container_name: mysql
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: testdb
+    env_file:
+      - .env
     ports:
-      - "3306:3306"
+      - "3306:3306"   
     volumes:
       - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   mysql_data:
