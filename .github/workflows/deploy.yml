@@ -62,8 +62,13 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com
-            
-            cd project
-            
+
+            if [ ! -d "crud-project" ]; then
+               git clone https://github.com/Sejalthakur17/crud-project.git
+            fi
+
+            cd crud-project
+            git pull
+
             docker-compose pull
             docker-compose up -d
