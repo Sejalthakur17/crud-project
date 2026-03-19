@@ -1,0 +1,69 @@
+name: CI/CD Full Automation
+
+on:
+  push:
+    branches: [main]
+
+env:
+  AWS_REGION: ap-south-1
+  ACCOUNT_ID: 909646905892
+  ECR_FRONTEND: 909646905892.dkr.ecr.ap-south-1.amazonaws.com/frontend
+  ECR_BACKEND: 909646905892.dkr.ecr.ap-south-1.amazonaws.com/backend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # AWS login
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ${{ env.AWS_REGION }}
+
+      # Create repos if not exist
+      - name: Ensure ECR repositories exist
+        run: |
+          aws ecr describe-repositories --repository-names frontend || \
+          aws ecr create-repository --repository-name frontend
+
+          aws ecr describe-repositories --repository-names backend || \
+          aws ecr create-repository --repository-name backend
+
+      # Login to ECR
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Build & push frontend
+      - name: Build & Push Frontend
+        run: |
+          docker build -t frontend ./frontend
+          docker tag frontend:latest $ECR_FRONTEND:latest
+          docker push $ECR_FRONTEND:latest
+
+      # Build & push backend
+      - name: Build & Push Backend
+        run: |
+          docker build -t backend ./backend
+          docker tag backend:latest $ECR_BACKEND:latest
+          docker push $ECR_BACKEND:latest
+
+      # Deploy
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com
+            
+            cd project
+            
+            docker-compose pull
+            docker-compose up -d
