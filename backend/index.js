@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 //importing express, environmental variables, bodyparser, router, database connection function and declaring them in a varibale to be using it in our index.js file
 const express = require('express');
 const dotenv = require('dotenv');
@@ -8,7 +10,7 @@ const bodyParser = require('body-parser');
 const cors = require("cors")
 dotenv.config();
 //using the port in environmental variable or 3000
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 // middleware to parse incoming request in bodies
 app.use(express.json());
