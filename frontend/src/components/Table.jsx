@@ -56,37 +56,35 @@ function Table() {
   return (
     <>
       <Toaster richColors closeButton />
-      <div className="container mt-5">
-        <h1 className="mb-4" id="h1">
-          User Table 
-        </h1>
-        <CreateUserModal addUser={addUser} />
-        <EditUserModal />
-        <DeleteUserModal />
+      <div className="container">
+      <h1>User Dashboard</h1>
 
-        {users.length === 0 ? (
-          <h3 id="h3">No Users in Database</h3>
-        ) : (
-          <table className="table table-bordered table-hover">
-            <thead className="thead-dark">
-              <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+      <div className="btn-group">
+      <button className="btn create">Create User</button>
+      <button className="btn edit">Edit User</button>
+      <button className="btn delete">Delete User</button>
       </div>
+
+      <table className="styled-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+        </tr>
+       </thead>
+
+      <tbody>
+        {users.map((user, index) => (
+          <tr key={user.id}>
+            <td>{index + 1}</td>
+            <td>{user.name}</td>
+            <td>{user.email}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
     </>
   );
 }

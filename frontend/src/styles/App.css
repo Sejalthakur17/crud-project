@@ -1,8 +1,75 @@
-#h1, #h3 {
-    text-align: center;
+/* Container */
+.container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+  text-align: center;
 }
 
-#button {
-    display: block !important;
-    margin: 2rem auto !important;
+/* Title */
+h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Buttons */
+.btn-group {
+  margin-bottom: 20px;
+}
+
+.btn {
+  padding: 10px 18px;
+  margin: 5px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.create {
+  background-color: #28a745;
+  color: white;
+}
+
+.edit {
+  background-color: #ffc107;
+}
+
+.delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* Table */
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.styled-table thead {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 12px;
+  text-align: center;
+}
+
+.styled-table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.styled-table tbody tr:hover {
+  background-color: #f1f1f1;
 }
