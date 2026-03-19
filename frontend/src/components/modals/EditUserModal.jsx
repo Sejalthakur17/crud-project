@@ -4,10 +4,11 @@ import { toast } from "sonner";
 import axios from "axios";
 
 //starting of the functional component which edits the user in the database
-function EditUserModal({ user, onUserUpdated }) {
+function EditUserModal() {
   //using state variables for access of the input fields
-  const [name, setName] = useState(user?.name || "");
-  const [email, setEmail] = useState(user?.email || "");
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
   //function for dynamic change of values for the input fields of id field
   const handleIdChange = (event) => {
@@ -34,7 +35,7 @@ function EditUserModal({ user, onUserUpdated }) {
     try {
       //put req to server
       const res = await axios.put(import.meta.env.VITE_API_URL, {
-        id: user.id,
+        id,
         name,
         email
       });
@@ -47,7 +48,9 @@ function EditUserModal({ user, onUserUpdated }) {
         setEmail(""); //empty the fields after successful operation
 
         //after 3 sec reload the page for users to view edit
-        setTimeout(() => 3000);
+        setTimeout(() => {
+          location.reload();
+        }, 3000);
 
       }
     } catch (error) {
@@ -89,6 +92,20 @@ function EditUserModal({ user, onUserUpdated }) {
                 aria-label="Close"
               ></button>
             </div>
+            <div className="modal-body">
+              <div className="mb-3">
+                <label htmlFor="id" className="form-label">
+                  Id:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="id"
+                  placeholder="Ex: 12"
+                  value={id}
+                  onChange={handleIdChange}
+                />
+              </div>
               <div className="mb-3">
                 <label htmlFor="name" className="form-label">
                   New Name:
@@ -128,6 +145,7 @@ function EditUserModal({ user, onUserUpdated }) {
             </div>
           </div>
         </div>
+      </div>
     </>
   );
 }
